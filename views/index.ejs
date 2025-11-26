@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cat Fact Keeper</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Cat Fact Keeper</h1>
+
+        <div class="api-section">
+            <h2>Random Cat Fact (from API)</h2>
+            <p class="fact-text">"<%= randomFact %>"</p>
+        </div>
+
+        <div class="form-section">
+            <h2>Save a Fact</h2>
+            <p>Use the form below to save the fact above or write your own note.</p>
+            <!-- Requirement: At least one form where users provide some data -->
+            <form action="/facts" method="POST">
+                <textarea name="content" placeholder="Type a fact or copy the one above..." required><%= randomFact %></textarea>
+                <button type="submit">Save to Database</button>
+            </form>
+        </div>
+
+        <div class="saved-facts">
+            <h2>Saved Facts (from MongoDB)</h2>
+            <% if (savedFacts.length === 0) { %>
+                <p>No facts saved yet.</p>
+            <% } else { %>
+                <% savedFacts.forEach(fact => { %>
+                    <div class="saved-fact-item">
+                        <p><%= fact.content %></p>
+                        <span class="timestamp"><%= new Date(fact.createdAt).toLocaleString() %></span>
+                    </div>
+                <% }) %>
+            <% } %>
+        </div>
+    </div>
+</body>
+</html>
+
