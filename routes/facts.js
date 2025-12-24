@@ -6,12 +6,14 @@ const Fact = require('../models/Fact');
 router.post('/', async (req, res) => {
   try {
     const { content } = req.body;
+    console.log('Received fact to save:', content);
     if (content) {
-      await Fact.create({ content });
+      const newFact = await Fact.create({ content });
+      console.log('Fact saved successfully:', newFact._id);
     }
     res.redirect('/');
   } catch (err) {
-    console.error(err);
+    console.error('Error saving fact to MongoDB:', err.message);
     res.redirect('/');
   }
 });
