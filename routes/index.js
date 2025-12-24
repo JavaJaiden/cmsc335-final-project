@@ -4,25 +4,28 @@ const axios = require('axios');
 const Fact = require('../models/Fact');
 
 router.get('/', async (req, res) => {
+  let randomFact = 'Could not fetch a cat fact right now.';
+  let savedFacts = [];
+
+  // Requirement: API that provides some data
   try {
-    // Requirement: API that provides some data
     const apiResponse = await axios.get('https://catfact.ninja/fact');
-    const randomFact = apiResponse.data.fact;
-
-    // Requirement: Retrieve data from MongoDB
-    const savedFacts = await Fact.find().sort({ createdAt: -1 });
-
-    res.render('index', { 
-      randomFact, 
-      savedFacts 
-    });
+    randomFact = apiResponse.data.fact;
   } catch (err) {
-    console.error('Error fetching data:', err);
-    res.render('index', { 
-      randomFact: 'Could not fetch a cat fact right now.', 
-      savedFacts: [] 
-    });
+    console.error('Error fetching cat fact from API:', err.message);
   }
+
+  // Requirement: Retrieve data from MongoDB
+  try {
+    savedFacts = await Fact.find().sort({ createdAt: -1 });
+  } catch (err) {
+    console.error('Error fetching facts from MongoDB:', err.message);
+  }
+
+  res.render('index', { 
+    randomFact, 
+    savedFacts 
+  });
 });
 
 module.exports = router;
